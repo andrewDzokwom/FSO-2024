@@ -25,13 +25,13 @@ const  StatisticLine = ({text, value}) => {
 }
 
 const Statistic = ({good, neutral, bad})=>{
-  console.log(good, bad , neutral);
+  
   
   const total = good + neutral + bad
   const average = good/total;
   const positivePercent = ((good - bad)/total)*100
 
-  
+
   if (total === 0){
     return <p>No feedback given</p>
   }
