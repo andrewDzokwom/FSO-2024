@@ -20,14 +20,9 @@ const Anecdote = ({anecdotes, vote, selected})=>{
     </>
   )
 }
-const MostVotedAnecdote = ({vote, anecdotes, selected})=>{
-  return (
-  <>
+const MostVotedAnecdote = ({vote, anecdotes, selected})=>(
   <p>{isPositive(vote)? `${anecdotes[selected]}`: `No most voted anecdote yet!`}</p>
-  <p>has {vote[selected]>1 ? `${vote[selected]} votes`: `${vote[selected]} vote`}</p>
-  </>
-  )
-}
+)
 
 
 function App() {
@@ -58,7 +53,7 @@ function App() {
     const maxVote = Math.max(...newVote)
     setIndex(newVote.indexOf(maxVote))
   } 
-  
+  console.log(indexOfMaxVote)
 
   return (
     <>
@@ -72,6 +67,7 @@ function App() {
       <Button title={"next anecdote"} handClick={handleRandomAnecdote} />
       <Title title={"Anecdote with Most Votes"} />
      <MostVotedAnecdote vote={vote} anecdotes={anecdotes} selected={indexOfMaxVote} />
+     <p>{indexOfMaxVote === null ? `no vote yet` : `has ${vote[indexOfMaxVote]} vote(s)`}</p>
     </>
   )
 }
