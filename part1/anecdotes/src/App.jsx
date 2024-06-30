@@ -20,9 +20,14 @@ const Anecdote = ({anecdotes, vote, selected})=>{
     </>
   )
 }
-const MostVotedAnecdote = ({vote, anecdotes, selected})=>(
+const MostVotedAnecdote = ({vote, anecdotes, selected})=>{
+  return (
+  <>
   <p>{isPositive(vote)? `${anecdotes[selected]}`: `No most voted anecdote yet!`}</p>
-)
+  <p>has {vote[selected]>1 ? `${vote[selected]} votes`: `${vote[selected]} vote`}</p>
+  </>
+  )
+}
 
 
 function App() {
