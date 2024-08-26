@@ -1,34 +1,86 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Header from './components/Header'
+import Persons from "./components/Persons"
 
-function App() {
-  const [count, setCount] = useState(0)
+
+
+const App = () => {
+  // contacts list
+  const [persons, setPersons] = useState([
+    { name: 'Arto Hellas',
+      number: "690-234-90",
+      id: 1
+     }
+  ]) 
+  // for adding new name and number
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState("")
+
+  // contact searching 
+  const [searchTerm, setSearchTerm] = useState("")
+
+  //contacts to dispaly
+  const filteredPersons = searchTerm.trim().length > 0? persons.filter(person => person.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())): persons;
+
+  // handle setting of new contact name 
+  const handleNewName = (e)=>{
+    setNewName(e.target.value)
+  }
+
+  //handle setting of new number
+  const handleNewNumber = (e)=>{
+    setNewNumber(e.target.value) 
+  }
+  
+
+  // add contact to contact list and empty the newName and newNumber
+  const addPerson = (e)=>{
+    e.preventDefault()
+    const newPerson = {
+      name: newName.trim(),
+      number: newNumber.trim(), 
+      id: persons.length + 1
+    }
+
+    setPersons(persons.concat(newPerson))
+    setNewName("")
+    setNewNumber("")
+  
+  }
+
+  const  searchContacts = (e)=>{
+    setSearchTerm(e.target.value)
+  }
+
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <Header
+        title={"Phonebook"}
+        />
+      <Filter searchContacts={searchContacts} />
+      
+      <Header
+        title={"Add new contact"}
+        />
+
+      <PersonForm
+        newName={newName}
+        handleNewName={handleNewName}
+        newNumber={newNumber}
+        handleNewNumber={handleNewNumber}
+        addPerson={addPerson}
+        />
+   
+      <Header
+        title={"Numbers"}
+        />
+      <Persons
+        persons={filteredPersons}
+        />
+    </div>
   )
 }
 
