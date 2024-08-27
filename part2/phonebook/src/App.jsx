@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
 import Persons from "./components/Persons"
+import axios from "axios"
+
 
 
 
@@ -23,6 +25,14 @@ const App = () => {
 
   //contacts to dispaly
   const filteredPersons = searchTerm.trim().length > 0? persons.filter(person => person.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())): persons;
+
+  // use effect 
+  useEffect(()=>{
+    
+    axios.get("http://localhost:3001/persons").then((response)=>{
+      setPersons(response.data)
+    })
+  }, [])
 
   // handle setting of new contact name 
   const handleNewName = (e)=>{
