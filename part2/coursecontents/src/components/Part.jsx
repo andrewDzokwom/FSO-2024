@@ -1,5 +1,5 @@
 const Part = ({part})=>{
 
-    return <p>{part.name} with {part.exercises} exercises</p>;
+    return <p>{part.name} {part.exercises}</p>;
   }
 export default Part;  
