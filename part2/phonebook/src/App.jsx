@@ -61,7 +61,7 @@ const App = () => {
   }
 
   const  searchContacts = (e)=>{
-    setSearchTerm(e.target.value)
+    setSearchTerm(e.target.value.trim())
   }
 
 
