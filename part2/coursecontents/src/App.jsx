@@ -1,6 +1,5 @@
 import Course from './components/Course';
 import Total from "./components/Total"
-import Header from "./components/Header"
 
 
 
