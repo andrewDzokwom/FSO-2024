@@ -1,8 +1,14 @@
 import Person from "./Person"
 
-const Persons = ({persons})=>{
+const Persons = ({persons, deleteContact})=>{
     return(
-        <>{persons.map(person=> <Person key={person.id} person={person} /> )}</>
+        <>{persons.map(person=> <Person 
+                                    key={person.id} 
+                                    person={person} 
+                                    id={person.id}
+                                    deleteContact={deleteContact} 
+                                /> )}
+        </>
     )
 
 }

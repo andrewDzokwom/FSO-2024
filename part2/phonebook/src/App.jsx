@@ -1,21 +1,17 @@
 import { useState, useEffect } from 'react'
+import contacts from "./services/contacts"
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
 import Persons from "./components/Persons"
-import axios from "axios"
+import axios from 'axios'
 
 
 
 
 const App = () => {
   // contacts list
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas',
-      number: "690-234-90",
-      id: 1
-     }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   // for adding new name and number
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState("")
@@ -26,13 +22,15 @@ const App = () => {
   //contacts to dispaly
   const filteredPersons = searchTerm.trim().length > 0? persons.filter(person => person.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())): persons;
 
+  // hook 
+  const fecthDataHook = ()=>{
+    // axios.get("http://localhost:3001/persons").then((response)=>{
+    //   setPersons(response.data)
+    // })
+    contacts.getAll().then(person => setPersons(persons.concat(person)))
+  }
   // use effect 
-  useEffect(()=>{
-    
-    axios.get("http://localhost:3001/persons").then((response)=>{
-      setPersons(response.data)
-    })
-  }, [])
+  useEffect(fecthDataHook, [])
 
   // handle setting of new contact name 
   const handleNewName = (e)=>{
@@ -50,18 +48,40 @@ const App = () => {
     e.preventDefault()
     const newPerson = {
       name: newName.trim(),
-      number: newNumber.trim(), 
-      id: persons.length + 1
+      number: newNumber.trim()
     }
-
-    setPersons(persons.concat(newPerson))
-    setNewName("")
-    setNewNumber("")
+    // create person contact and update list on the front side
+    contacts
+      .createPerson(newPerson)
+      .then(person => setPersons(persons.concat(person)))
+    
+      setNewName("")
+      setNewNumber("")
   
   }
-
+  // contacts searching 
   const  searchContacts = (e)=>{
     setSearchTerm(e.target.value.trim())
+  }
+
+  // delete a contact from the list
+  const deleteContact = (id) =>{
+    const [targetedContact] = persons.filter(note => note.id === id)
+    console.log("the target is", targetedContact);
+    
+    const filteredPersons = persons.filter(person => person.id !== id)
+    console.log("target", targetedContact);
+
+    //confirm delete 
+    if(window.confirm(`delete ${targetedContact.name}?`)){
+      contacts.removePerson(id)
+    .then(()=>{
+      console.log("targettted", targetedContact);
+      
+      setPersons(filteredPersons)
+    })
+    }
+    
   }
 
 
@@ -89,7 +109,11 @@ const App = () => {
         />
       <Persons
         persons={filteredPersons}
+        deleteContact={deleteContact}
         />
+        <button onClick={()=>{
+          axios.delete("http://localhost:3001/persons/8")
+        }}>delete</button>
     </div>
   )
 }
