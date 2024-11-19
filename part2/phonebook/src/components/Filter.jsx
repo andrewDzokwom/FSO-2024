@@ -1,7 +1,7 @@
 const Filter = ({searchContacts})=>{
     return (
       <div>
-          filter shown with 
+          filter shown with{" "} 
           <input 
             type="text" 
             onChange={searchContacts}

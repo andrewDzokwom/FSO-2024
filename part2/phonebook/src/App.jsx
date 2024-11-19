@@ -4,7 +4,6 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
 import Persons from "./components/Persons"
-import axios from 'axios'
 
 
 
@@ -50,6 +49,14 @@ const App = () => {
       name: newName.trim(),
       number: newNumber.trim()
     }
+
+    // check if contact already exists
+    if(persons.find(person => person.name === newPerson.name)){
+      alert(`${newPerson.name} is already added to phonebook`)
+      setNewName("")
+      setNewNumber("")
+      return
+    }
     // create person contact and update list on the front side
     contacts
       .createPerson(newPerson)
@@ -67,17 +74,13 @@ const App = () => {
   // delete a contact from the list
   const deleteContact = (id) =>{
     const [targetedContact] = persons.filter(note => note.id === id)
-    console.log("the target is", targetedContact);
     
     const filteredPersons = persons.filter(person => person.id !== id)
-    console.log("target", targetedContact);
 
     //confirm delete 
     if(window.confirm(`delete ${targetedContact.name}?`)){
       contacts.removePerson(id)
     .then(()=>{
-      console.log("targettted", targetedContact);
-      
       setPersons(filteredPersons)
     })
     }
@@ -111,9 +114,7 @@ const App = () => {
         persons={filteredPersons}
         deleteContact={deleteContact}
         />
-        <button onClick={()=>{
-          axios.delete("http://localhost:3001/persons/8")
-        }}>delete</button>
+        
     </div>
   )
 }
