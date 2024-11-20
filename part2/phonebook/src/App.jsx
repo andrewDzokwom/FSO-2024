@@ -23,9 +23,6 @@ const App = () => {
 
   // hook 
   const fecthDataHook = ()=>{
-    // axios.get("http://localhost:3001/persons").then((response)=>{
-    //   setPersons(response.data)
-    // })
     contacts.getAll().then(person => setPersons(persons.concat(person)))
   }
   // use effect 
@@ -51,8 +48,18 @@ const App = () => {
     }
 
     // check if contact already exists
-    if(persons.find(person => person.name === newPerson.name)){
-      alert(`${newPerson.name} is already added to phonebook`)
+    if(persons.find(person => person.name.toLocaleLowerCase() === newPerson.name.toLowerCase())){
+      if (window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)){
+        const targetedPerson = persons.find(person => person.name.toLocaleLowerCase() === newPerson.name.toLowerCase())
+        const {id} = targetedPerson
+        let updatedPerson = {...targetedPerson, number: newPerson.number}
+        contacts
+        .updatePerson(id, updatedPerson)
+        .then(response => {
+          setPersons(persons.map(person => (person.id !== id)? person: response))
+        .catch(error => console.log(`failed: ${error.message}`))
+        })
+      }
       setNewName("")
       setNewNumber("")
       return
@@ -61,7 +68,7 @@ const App = () => {
     contacts
       .createPerson(newPerson)
       .then(person => setPersons(persons.concat(person)))
-    
+      .catch(error => console.log(`failed: ${error.message}`))
       setNewName("")
       setNewNumber("")
   
@@ -83,6 +90,7 @@ const App = () => {
     .then(()=>{
       setPersons(filteredPersons)
     })
+    .catch(error => console.log(`failed: ${error.message}`))
     }
     
   }
