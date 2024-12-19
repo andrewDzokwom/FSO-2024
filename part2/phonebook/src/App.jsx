@@ -46,8 +46,11 @@ const App = () => {
       name: newName.trim(),
       number: newNumber.trim()
     }
+    if (newPerson.name.length === 0 && newPerson.newNumber.length === 0){
+      return
+    }
+    
     console.log(persons.find(person => person.name === newPerson.name))
-    console.log(Boolean(undefined))
     // check if contact already exists
     if(persons.find(person => person.name.toLocaleLowerCase() === newPerson.name.toLowerCase())){
       if (window.confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`)){
