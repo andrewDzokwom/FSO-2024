@@ -46,7 +46,7 @@ const App = () => {
       name: newName.trim(),
       number: newNumber.trim()
     }
-    if (newPerson.name.length === 0 && newPerson.newNumber.length === 0){
+    if (newPerson.name.length === 0 && newPerson.number.length === 0){
       return
     }
     
