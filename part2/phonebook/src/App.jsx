@@ -4,8 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Header from './components/Header'
 import Persons from "./components/Persons"
-
-
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -18,15 +17,18 @@ const App = () => {
   // contact searching 
   const [searchTerm, setSearchTerm] = useState("")
 
-  //contacts to dispaly
+  // handle notification
+  const [notificationMessage, setNotificationMessage] = useState({message: "", isNotifiable: false, isAlert: false})
+
+  //contacts to display
   const filteredPersons = searchTerm.trim().length > 0? persons.filter(person => person.name.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())): persons;
 
   // hook 
-  const fecthDataHook = ()=>{
+  const fetchDataHook = ()=>{
     contacts.getAll().then(person => setPersons(persons.concat(person)))
   }
   // use effect 
-  useEffect(fecthDataHook, [])
+  useEffect(fetchDataHook, [])
 
   // handle setting of new contact name 
   const handleNewName = (e)=>{
@@ -60,7 +62,17 @@ const App = () => {
         .updatePerson(id, updatedPerson)
         .then(response => {
           setPersons(persons.map(person => (person.id !== id)? person: response))
-        .catch(error => console.log(`failed: ${error.message}`))
+          setNotificationMessage({message: `${updatedPerson.name}'s number updated`, isNotifiable: true, isAlert: false})
+          setTimeout(()=>{
+            setNotificationMessage({...notificationMessage, message:"", isNotifiable: false})
+          }, 3000)
+        .catch(error => {
+          console.log(error)
+          setNotificationMessage({...notificationMessage, message:`Information of ${updatedPerson.name} has already been removed from server`, isNotifiable: false})
+          setTimeout(()=>{
+            setNotificationMessage({...notificationMessage, message:"", isNotifiable: false})
+          }, 3000)
+        })
         })
       }
       setNewName("")
@@ -70,8 +82,17 @@ const App = () => {
     // create person contact and update list on the front side
     contacts
       .createPerson(newPerson)
-      .then(person => setPersons(persons.concat(person)))
-      .catch(error => console.log(`failed: ${error.message}`))
+      .then(person => {
+        setPersons(persons.concat(person))
+        setNotificationMessage({...notificationMessage, message: `Added ${newPerson.name} successfully!`, isNotifiable: true})
+        setTimeout(()=>{
+          setNotificationMessage({...notificationMessage, message:"", isNotifiable: false})
+        }, 3000)
+      })
+      .catch(error => {
+        console.log(error)
+
+      })
       setNewName("")
       setNewNumber("")
   
@@ -91,7 +112,12 @@ const App = () => {
     if(window.confirm(`delete ${targetedContact.name}?`)){
       contacts.removePerson(id)
     .then(()=>{
+      setNotificationMessage({isAlert: true,message: `${targetedContact.name} deleted from the server!`, isNotifiable: true})
       setPersons(filteredPersons)
+      setTimeout(()=>{
+        setNotificationMessage({isAlert: false, message:"", isNotifiable: false})
+      }, 3000)
+
     })
     .catch(error => console.log(`failed: ${error.message}`))
     }
@@ -104,6 +130,7 @@ const App = () => {
       <Header
         title={"Phonebook"}
         />
+      {notificationMessage.isNotifiable? <Notification message={notificationMessage.message} isAlert={notificationMessage.isAlert} />:null}
       <Filter searchContacts={searchContacts} />
       
       <Header

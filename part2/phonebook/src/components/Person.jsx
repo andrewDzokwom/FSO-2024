@@ -1,6 +1,6 @@
 const Person = ({person, deleteContact})=>{
     return(
-        <div>
+        <div className={"person"}>
             {person.name} {person.number} {"  "}
             <button onClick={()=> deleteContact(person.id)}>delete</button>
         </div>
