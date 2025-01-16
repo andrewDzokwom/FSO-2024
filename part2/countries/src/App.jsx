@@ -30,7 +30,7 @@ function Country({ country }){
 function App() {
 
   const [country, setCountry] = useState({})
-  const [countryInput, setCountryInput] = useState("")
+  const [countryInput, setCountryInput] = useState("cameroon")
   const [isloaded, setIsloaded] = useState(false)
 
   //grab data from the api by listening to the input value
