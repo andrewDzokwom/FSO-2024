@@ -51,6 +51,24 @@ const App = () => {
     if (newPerson.name.length === 0 && newPerson.number.length === 0){
       return
     }
+
+    // check validity of both name and number pattern
+    if (newPerson.name.length < 3){
+      setNotificationMessage({message: `Person validation failed: name: Path '${newPerson.name}' is shorter than the minimum allowed length (3)`, isNotifiable: true, isAlert: true})
+          setTimeout(()=>{
+            setNotificationMessage({...notificationMessage, message:"", isNotifiable: false})
+          }, 4000)
+    }
+
+    // number regex pattern 
+    const regex = /^\d{2,3}-\d+$/;
+
+    if (!regex.test(newPerson.number) || newPerson.number.length < 8) {
+      setNotificationMessage({message: `Invalid number format: if should be of the form "xxx-xxx..." or "xx-xxx..." where x is any number and should be atleast 8digits`, isNotifiable: true, isAlert: true})
+          setTimeout(()=>{
+            setNotificationMessage({...notificationMessage, message:"", isNotifiable: false})
+          }, 4000)
+    }
     
     // check if contact already exists
     if(persons.find(person => person.name.toLocaleLowerCase() === newPerson.name.toLowerCase())){
