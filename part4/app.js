@@ -3,7 +3,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const config  = require('./utils/config')
 const Blog = require('./models/blog')
-
+const blogsRouter = require('./routes/blogsRouter')
 const app = express()
 
 app.use(cors())
@@ -26,26 +26,8 @@ app.get('/', (req, res)=>{
     message: "This is working!"
   })
 })
-
-app.get('/api/blogs', (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
-})
-
-app.post('/api/blogs', (request, response) => {
-  const blog = new Blog(request.body)
-
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
-})
+app.use('/api/blogs', blogsRouter)
 
 const PORT = process.env.PORT || 3000
-
 
 module.exports = {app}

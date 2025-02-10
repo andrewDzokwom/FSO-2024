@@ -5,6 +5,15 @@ const blogSchema = new mongoose.Schema({
   author: String,
   url: String,
   likes: Number,
+},{
+  toJSON:{
+    transform: (document, returnedObject)=>{
+      returnedObject.id = returnedObject._id
+      delete returnedObject.__v
+      delete returnedObject._id
+      return returnedObject
+    }
+  }
 })
 
 const Blog = mongoose.model('Blog', blogSchema)
