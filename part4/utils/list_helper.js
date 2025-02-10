@@ -9,4 +9,12 @@ function totalLikes(blogs){
   return blogs.reduce(sumReducer, 0)
 }
 
-module.exports = { dummy, totalLikes }
+function favoriteBlog(blogs){
+  const arrOfLikes = blogs.map(blog => blog.likes)
+  const highestLike = Math.max(...arrOfLikes)
+  const favBlog = blogs.find(blog => blog.likes === highestLike)
+  return blogs.length ===0 ? {} : favBlog
+
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, favoriteBlog }
